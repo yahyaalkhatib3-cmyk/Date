@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Very Important Question ❤️</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; overflow:hidden;
+  display:grid; place-items:center;
+  font-family:Georgia,"Times New Roman",serif;
+  background:linear-gradient(135deg,#fff4f7,#f8dce5,#f3cbd8);
+  color:#432a32;
+}
+.card{
+  width:min(92vw,580px); padding:46px 30px; text-align:center;
+  background:rgba(255,255,255,.88); border-radius:30px;
+  box-shadow:0 25px 80px rgba(90,40,55,.2);
+  position:relative; z-index:5;
+}
+.heart{font-size:48px;animation:pulse 1.5s infinite}
+.eyebrow{font:12px Arial,sans-serif;letter-spacing:4px;text-transform:uppercase;color:#9b6574}
+h1{font-size:clamp(34px,8vw,54px);font-weight:500;line-height:1.05;margin:12px 0}
+.question{font-size:21px;line-height:1.5}
+.date{
+  display:inline-block;padding:15px 27px;margin:10px 0 28px;
+  border-radius:18px;background:#fff0f3;border:1px solid #efc6d1
+}
+.date strong{display:block;font:600 22px Arial,sans-serif;color:#783f50}
+.date span{display:block;margin-top:5px;font:15px Arial,sans-serif;color:#8f6873}
+.buttons{display:flex;justify-content:center;align-items:center;gap:16px;min-height:58px}
+button{
+  border:0;border-radius:999px;padding:15px 29px;font-size:16px;
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+}
+.yes{background:#8f4f62;color:#fff;box-shadow:0 10px 25px rgba(143,79,98,.3)}
+.no{background:#fff;color:#704454;border:1px solid #e6c2cc;position:relative}
+button:hover{transform:translateY(-2px)}
+#answer{min-height:30px;margin-top:20px;font-size:19px;color:#7b4052}
+.footer{margin-top:25px;font:12px Arial,sans-serif;color:#a47c87}
+#celebration{
+  display:none;position:fixed;inset:0;z-index:20;
+  pointer-events:none;
+}
+.firework{
+  position:absolute;width:7px;height:7px;border-radius:50%;
+  background:white;box-shadow:0 0 12px 3px white;
+  animation:explode 1.3s ease-out forwards;
+}
+.confetti{
+  position:absolute;top:-20px;font-size:25px;
+  animation:fall 3s linear forwards;
+}
+.success{
+  position:fixed;inset:0;display:none;place-items:center;z-index:15;
+  pointer-events:none;
+}
+.success h2{
+  font-size:clamp(40px,10vw,78px);color:#fff;text-shadow:0 5px 25px #7b4052;
+  animation:pop .8s ease;
+}
+@keyframes pulse{50%{transform:scale(1.1)}}
+@keyframes explode{
+  from{transform:translate(0,0) scale(.3);opacity:1}
+  to{transform:translate(var(--x),var(--y)) scale(1.5);opacity:0}
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+@keyframes pop{
+  from{transform:scale(.2);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+</style>
+</head>
+<body>
+<main class="card" id="card">
+  <div class="heart">♡</div>
+  <div class="eyebrow">A very important question</div>
+  <h1>Will you go on a date with me?</h1>
+  <p class="question">I have a little plan for us... and I really want you there. ❤️</p>
+
+  <div class="date">
+    <strong>Tuesday, August 11</strong>
+    <span>6:30 PM</span>
+  </div>
+
+  <div class="buttons">
+    <button class="yes" onclick="yesClicked()">Yes, I'd love to! ❤️</button>
+    <button class="no" id="noBtn">No 😌</button>
+  </div>
+
+  <div id="answer"></div>
+  <div class="footer">Choose wisely... 👀</div>
+</main>
+
+<div id="celebration"></div>
+<div class="success" id="success"><h2>IT'S A DATE! ❤️</h2></div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+
+function moveNo() {
+  const pad = 20;
+  const maxX = window.innerWidth - noBtn.offsetWidth - pad;
+  const maxY = window.innerHeight - noBtn.offsetHeight - pad;
+  noBtn.style.position = "fixed";
+  noBtn.style.left = Math.max(pad, Math.random()*maxX) + "px";
+  noBtn.style.top = Math.max(pad, Math.random()*maxY) + "px";
+}
+
+// Run away on mouse/touch before she can click it
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", e => { e.preventDefault(); moveNo(); });
+noBtn.addEventListener("click", e => { e.preventDefault(); moveNo(); });
+
+function yesClicked() {
+  document.getElementById("answer").textContent = "";
+  document.getElementById("celebration").style.display = "block";
+  document.getElementById("success").style.display = "grid";
+
+  // Fireworks
+  for(let f=0; f<12; f++){
+    setTimeout(() => createFirework(
+      10 + Math.random()*80,
+      10 + Math.random()*60
+    ), f*250);
+  }
+
+  // Confetti/hearts
+  for(let i=0;i<80;i++){
+    setTimeout(() => {
+      const c=document.createElement("div");
+      c.className="confetti";
+      c.textContent=["❤️","💕","✨","💗","♡"][Math.floor(Math.random()*5)];
+      c.style.left=Math.random()*100+"vw";
+      c.style.animationDuration=(2+Math.random()*2)+"s";
+      document.getElementById("celebration").appendChild(c);
+      setTimeout(()=>c.remove(),4000);
+    }, Math.random()*1800);
+  }
+
+  setTimeout(()=>{
+    document.getElementById("success").style.display="none";
+    document.getElementById("celebration").style.display="none";
+  },5000);
+}
+
+function createFirework(px,py){
+  const wrap=document.getElementById("celebration");
+  const cx=window.innerWidth*px/100, cy=window.innerHeight*py/100;
+  for(let i=0;i<32;i++){
+    const p=document.createElement("div");
+    p.className="firework";
+    const a=(Math.PI*2*i)/32;
+    const r=70+Math.random()*110;
+    p.style.left=cx+"px"; p.style.top=cy+"px";
+    p.style.setProperty("--x",Math.cos(a)*r+"px");
+    p.style.setProperty("--y",Math.sin(a)*r+"px");
+    wrap.appendChild(p);
+    setTimeout(()=>p.remove(),1400);
+  }
+}
+</script>
+</body>
+</html>
